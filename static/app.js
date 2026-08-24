@@ -91,16 +91,18 @@ function startHorizonGrid() {
   }
 
   function vanishingPoint(width, height) {
+    const canvasRect = canvas.getBoundingClientRect();
     const sun = document.querySelector(".sun");
+    const mountains = document.querySelector(".mountains");
+    let x = width / 2;
     if (sun) {
       const sunRect = sun.getBoundingClientRect();
-      const canvasRect = canvas.getBoundingClientRect();
-      return {
-        x: sunRect.left + sunRect.width / 2 - canvasRect.left,
-        y: sunRect.top + sunRect.height * 0.58 - canvasRect.top,
-      };
+      x = sunRect.left + sunRect.width / 2 - canvasRect.left;
     }
-    return { x: width / 2, y: height * 0.58 };
+    const y = mountains
+      ? mountains.getBoundingClientRect().bottom - canvasRect.top
+      : height * (1 - 0.32);
+    return { x, y };
   }
 
   function draw(now) {

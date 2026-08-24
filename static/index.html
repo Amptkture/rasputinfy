@@ -25,7 +25,11 @@
     </div>
     <canvas class="grid-floor" id="grid-floor" aria-hidden="true"></canvas>
     <div class="sun"></div>
-    <div class="mountains"></div>
+    <svg class="mountains" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+      <path class="mountain-far" d="M0,220 L0,130 L100,95 L200,115 L320,55 L450,100 L580,70 L720,110 L850,40 L980,90 L1100,75 L1200,105 L1200,220 Z"/>
+      <path class="mountain-near" d="M0,220 L0,165 L50,150 L90,85 L130,115 L175,50 L220,95 L270,35 L310,80 L355,120 L400,90 L450,145 L500,125 L540,160 L580,100 L630,28 L680,85 L730,55 L780,130 L830,70 L880,40 L930,95 L990,60 L1050,125 L1110,90 L1200,155 L1200,220 Z"/>
+      <path class="mountain-ridge" d="M0,165 L50,150 L90,85 L130,115 L175,50 L220,95 L270,35 L310,80 L355,120 L400,90 L450,145 L500,125 L540,160 L580,100 L630,28 L680,85 L730,55 L780,130 L830,70 L880,40 L930,95 L990,60 L1050,125 L1110,90 L1200,155"/>
+    </svg>
     <div class="content safe-area">
       <p class="label now-playing-label">NOW PLAYING</p>
       <h1 id="artist" class="artist"></h1>
