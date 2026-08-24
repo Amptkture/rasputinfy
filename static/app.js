@@ -19,6 +19,8 @@ function showPlaying(payload) {
   if (payload.status === "paused") {
     playingView.classList.add("paused");
   }
+
+  window.dispatchEvent(new Event("resize"));
 }
 
 function showStandby() {
@@ -56,3 +58,104 @@ async function pollNowPlaying() {
 
 pollNowPlaying();
 setInterval(pollNowPlaying, POLL_MS);
+startHorizonGrid();
+
+function startHorizonGrid() {
+  const canvas = document.getElementById("grid-floor");
+  if (!canvas || !canvas.getContext) {
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+  const zNear = 1;
+  const zFar = 16;
+  const rowSpacing = 0.48;
+  const colSpacing = 0.62;
+  const xExtent = 10;
+  const scrollSpeed = 1.15;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    if (width < 2 || height < 2) {
+      return;
+    }
+    const nextW = Math.round(width * dpr);
+    const nextH = Math.round(height * dpr);
+    if (canvas.width !== nextW || canvas.height !== nextH) {
+      canvas.width = nextW;
+      canvas.height = nextH;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+  }
+
+  function vanishingPoint(width, height) {
+    const sun = document.querySelector(".sun");
+    if (sun) {
+      const sunRect = sun.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      return {
+        x: sunRect.left + sunRect.width / 2 - canvasRect.left,
+        y: sunRect.top + sunRect.height * 0.58 - canvasRect.top,
+      };
+    }
+    return { x: width / 2, y: height * 0.58 };
+  }
+
+  function draw(now) {
+    resize();
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    ctx.clearRect(0, 0, width, height);
+
+    if (!playingView.classList.contains("hidden")) {
+      const { x: vpX, y: vpY } = vanishingPoint(width, height);
+      const groundH = height - vpY;
+
+      if (groundH > 8) {
+        const scale = (width * 1.15 * zNear) / xExtent;
+        const lineWidth = Math.max(2.5, width / 420);
+        const offset = ((now / 1000) * scrollSpeed) % rowSpacing;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, vpY, width, groundH);
+        ctx.clip();
+        ctx.lineCap = "butt";
+
+        ctx.beginPath();
+        for (let x = -xExtent; x <= xExtent + 0.001; x += colSpacing) {
+          const xBottom = vpX + (x * scale) / zNear;
+          ctx.moveTo(xBottom, height);
+          ctx.lineTo(vpX, vpY);
+        }
+        ctx.strokeStyle = "rgba(255, 42, 109, 0.95)";
+        ctx.lineWidth = lineWidth;
+        ctx.stroke();
+
+        for (let z = zNear + offset; z < zFar; z += rowSpacing) {
+          const depth = (z - zNear) / (zFar - zNear);
+          const y = vpY + groundH * (zNear / z);
+          const half = (xExtent * scale) / z;
+          const alpha = 0.95 * (1 - depth * depth * 0.85);
+
+          ctx.beginPath();
+          ctx.moveTo(vpX - half, y);
+          ctx.lineTo(vpX + half, y);
+          ctx.strokeStyle = `rgba(5, 217, 232, ${alpha.toFixed(3)})`;
+          ctx.lineWidth = lineWidth;
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+  requestAnimationFrame(draw);
+}
