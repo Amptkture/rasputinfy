@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rasputinfy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="scanlines">
+  <div id="playing-view" class="view hidden" aria-hidden="true">
+    <div class="sky">
+      <div class="sun"></div>
+      <div class="stars"></div>
+    </div>
+    <div class="grid-floor"></div>
+    <div class="mountains"></div>
+    <div class="content safe-area">
+      <p class="label now-playing-label">NOW PLAYING</p>
+      <h1 id="artist" class="artist"></h1>
+      <h2 id="title" class="title"></h2>
+    </div>
+  </div>
+
+  <div id="standby-view" class="view" aria-hidden="false">
+    <div class="testcard">
+      <div class="color-bars">
+        <span class="bar white"></span>
+        <span class="bar yellow"></span>
+        <span class="bar cyan"></span>
+        <span class="bar green"></span>
+        <span class="bar magenta"></span>
+        <span class="bar red"></span>
+        <span class="bar blue"></span>
+        <span class="bar black"></span>
+      </div>
+      <div class="testcard-center safe-area">
+        <div class="crosshair">
+          <div class="circle"></div>
+          <div class="cross-h"></div>
+          <div class="cross-v"></div>
+        </div>
+        <h1 class="brand">RASPUTINFY</h1>
+        <p class="standby-text">STANDBY — AWAITING SPOTIFY</p>
+        <p class="standby-sub">Connect to your Raspotify device and press play</p>
+      </div>
+      <div class="noise"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

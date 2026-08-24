@@ -1,0 +1,18 @@
+[Unit]
+Description=Rasputinfy Chromium kiosk display
+After=rasputinfy.service graphical.target
+Requires=rasputinfy.service
+Wants=graphical.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi/.Xauthority
+ExecStart=/usr/bin/chromium-browser --kiosk --noerrdialogs --disable-infobars --disable-session-crashed-bubble --disable-translate --check-for-update-interval=31536000 http://127.0.0.1:8765
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target
